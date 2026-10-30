@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ContactMessage index{% endblock %}
+
+{% block body %}
+    <h1>ContactMessage index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Message</th>
+                <th>Reply</th>
+                <th>RepliedAt</th>
+                <th>IsRead</th>
+                <th>CreatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for contact_message in contact_messages %}
+            <tr>
+                <td>{{ contact_message.id }}</td>
+                <td>{{ contact_message.name }}</td>
+                <td>{{ contact_message.email }}</td>
+                <td>{{ contact_message.message }}</td>
+                <td>{{ contact_message.reply }}</td>
+                <td>{{ contact_message.repliedAt ? contact_message.repliedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ contact_message.isRead ? 'Yes' : 'No' }}</td>
+                <td>{{ contact_message.createdAt ? contact_message.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_contact_message_show', {'id': contact_message.id}) }}">show</a>
+                    <a href="{{ path('app_contact_message_edit', {'id': contact_message.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_contact_message_new') }}">Create new</a>
+{% endblock %}

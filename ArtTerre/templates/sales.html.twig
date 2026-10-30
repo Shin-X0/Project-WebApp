@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Sales — Art Terre Creations{% endblock %}
+
+{% block body %}
+    <section class="page-hero">
+      <div class="container">
+        <h1 class="page-hero-title reveal">My Sales</h1>
+        <p class="page-hero-sub reveal">Orders that include your artworks — update the status as you process them.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        {% if orders is empty %}
+          <p class="reveal">No orders with your artworks yet.</p>
+        {% endif %}
+
+        {% for order in orders %}
+          <div class="auth-card reveal">
+            <h2 class="cart-summary-title">Order {{ order.orderNo }}</h2>
+            <p class="order-note">
+              Status: <strong>{{ order.status }}</strong> — {{ order.name }} · {{ order.email }} · total ${{ order.total }}
+            </p>
+            <ul>
+              {% for item in order.items %}
+                {% if item.artist and item.artist.id == app.user.id %}
+                  <li>{{ item.qty }} × {{ item.title }} — ${{ item.price }}</li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+            <a class="btn btn-outline" href="{{ path('app_order_pending', { no: order.orderNo }) }}">Update status</a>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+{% endblock %}

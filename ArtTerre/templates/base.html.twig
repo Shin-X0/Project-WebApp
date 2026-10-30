@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Art Terre Creations — Where Art Meets Opportunity{% endblock %}</title>
+  <meta name="description" content="Art Terre is a sustainable platform bridging artists and collectors worldwide. Showcase authentic creativity and help every artist thrive." />
+
+  <!-- Brand typefaces (Brand Guide 101): headings — Space Grotesk, body — Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="{{ asset('images/logo.png') }}" />
+  <link rel="stylesheet" href="{{ asset('css/style.css') }}?v=26" />
+</head>
+<body>
+
+  <!-- ======================= HEADER ======================= -->
+  <header class="header" id="header">
+    <nav class="navbar container">
+      <a href="{{ path('app_home') }}" class="logo" aria-label="Art Terre Creations — Home">
+        <img class="logo-img" src="{{ asset('images/logo.png') }}" alt="Art Terre Creations logo" />
+      </a>
+
+      <ul class="nav-menu" id="nav-menu">
+        {% set route = app.current_route %}
+        <li class="nav-item"><a href="{{ path('app_home') }}" class="nav-link{{ route == 'app_home' ? ' active' : '' }}">Home</a></li>
+        <li class="nav-item"><a href="{{ path('app_home') }}#artists" class="nav-link{{ route == 'app_artists' ? ' active' : '' }}">Artist</a></li>
+        <li class="nav-item"><a href="{{ path('app_home') }}#artworks" class="nav-link{{ route == 'app_artworks' ? ' active' : '' }}">Artworks</a></li>
+        <li class="nav-item"><a href="{{ path('app_home') }}#about" class="nav-link">About</a></li>
+        <li class="nav-item"><a href="{{ path('app_home') }}#contact" class="nav-link">Contact</a></li>
+      </ul>
+
+      <!-- Account: sign-in button (guest) or avatar chip + dropdown menu -->
+      <div class="header-account">
+        {% if app.user %}
+          {% set firstName = app.user.name|trim|split(' ')|first %}
+          {% set initial = app.user.name|first|upper %}
+          {% set isSellerOnly = app.user.isArtist() and not app.user.isAdmin() %}
+          <div class="account-menu" id="account-menu">
+            <button class="user-chip" id="account-toggle" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="account-dropdown" title="{{ app.user.email }}">
+              <span class="user-avatar">{{ initial }}</span>
+              <span class="user-name">Hi, {{ firstName }}</span>
+              <span class="chip-bars" aria-hidden="true"><span></span><span></span><span></span></span>
+            </button>
+            <div class="account-dropdown" id="account-dropdown" role="menu" aria-labelledby="account-toggle">
+              <p class="account-email" title="{{ app.user.email }}">{{ app.user.email }}</p>
+              {% if app.user.isArtist() %}
+                <a class="account-item" href="{{ path('app_upload_artwork') }}" role="menuitem">Sell artwork</a>
+              {% endif %}
+              {% if isSellerOnly %}
+                <a class="account-item" href="{{ path('app_sales') }}" role="menuitem">My sales</a>
+              {% endif %}
+              {% if app.user.isAdmin() %}
+                <a class="account-item" href="{{ path('app_admin_dashboard') }}" role="menuitem">Dashboard</a>
+                <a class="account-item" href="{{ path('app_admin_orders_index') }}" role="menuitem">Manage orders</a>
+                <a class="account-item" href="{{ path('app_admin_messages_index') }}" role="menuitem">Inbox</a>
+              {% endif %}
+              {% if not isSellerOnly %}
+                <a class="account-item" href="{{ path('app_orders') }}" role="menuitem">My orders</a>
+              {% endif %}
+              <a class="account-item" href="{{ path('app_messages') }}" role="menuitem">My messages</a>
+              <a class="account-item account-signout" href="{{ path('app_logout') }}" role="menuitem">Sign out</a>
+            </div>
+          </div>
+        {% else %}
+          <a class="btn btn-accent signin-btn" href="{{ path('app_login') }}">Sign in</a>
+        {% endif %}
+      </div>
+
+      <!-- Cart (links to the cart page) -->
+      <a class="cart-btn" id="cart-btn" href="{{ path('app_cart') }}" aria-label="Shopping cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/>
+          <path d="M2.5 3.5h2.6l2.5 11.2a1.8 1.8 0 0 0 1.8 1.4h7.9a1.8 1.8 0 0 0 1.8-1.4L21 7.5H6.1"/>
+        </svg>
+        <span class="cart-count" id="cart-count">0</span>
+      </a>
+
+      <button class="hamburger" id="hamburger" aria-label="Open navigation menu" aria-expanded="false" aria-controls="nav-menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+
+  {% for label, messages in app.flashes %}
+    {% for message in messages %}
+      <p class="upload-flash {{ label == 'error' ? 'auth-error' : '' }}" role="{{ label == 'error' ? 'alert' : 'status' }}">{{ message }}</p>
+    {% endfor %}
+  {% endfor %}
+
+  {% block body %}{% endblock %}
+</main>
+
+<!-- ======================= FOOTER (cream, with Contact Us) ======================= -->
+<footer class="footer" id="contact">
+  <div class="container footer-main">
+    <div class="footer-brand reveal">
+      <a href="{{ path('app_home') }}" class="logo footer-logo" aria-label="Art Terre Creations — Home">
+        <img class="logo-img" src="{{ asset('images/logo.png') }}" alt="Art Terre Creations logo" />
+      </a>
+
+      <p class="footer-mission">
+        To bridge artists and collectors worldwide by creating a sustainable platform
+        that showcases authentic creativity and opens opportunities for every artist to thrive.
+      </p>
+
+      <div class="socials">
+        <a href="https://www.instagram.com/" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/></svg>
+          Instagram
+        </a>
+        <a href="https://www.linkedin.com/" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.5c0-1.31-.02-3-1.83-3-1.83 0-2.11 1.43-2.11 2.9V21H9z"/></svg>
+          LinkedIn
+        </a>
+        <a href="https://www.facebook.com/" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.5-3.89 3.78-3.89 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.45 2.89h-2.33v6.99A10 10 0 0 0 22 12Z"/></svg>
+          Facebook
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-contact reveal">
+      <h2>Contact Us</h2>
+      <p>
+        Have a question, want to collaborate, or simply want to learn more about
+        Art Terre? We’d love to hear from you.
+      </p>
+
+      <form class="contact-form" id="contact-form" method="post" action="{{ path('app_contact') }}" novalidate>
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('contact') }}" />
+        <input type="hidden" name="redirect" value="{{ app.request.requestUri }}" />
+
+        {% if app.request.query.get('contact') == 'sent' %}
+          <p class="upload-flash contact-flash" role="status">Message sent — the admin will reply soon!{% if app.user %} Read it in <a href="{{ path('app_messages') }}">My messages</a>.{% endif %}</p>
+        {% elseif app.request.query.get('contact') == 'csrf' %}
+          <p class="auth-error contact-flash" role="alert">Your session expired — please send your message again.</p>
+        {% elseif app.request.query.get('contact') == 'error' %}
+          <p class="auth-error contact-flash" role="alert">Please fill in your name, a valid email, and a message (5+ characters).</p>
+        {% endif %}
+
+        <div class="line-field">
+          <label for="c-name">Name :</label>
+          <input type="text" id="c-name" name="name" autocomplete="name" required />
+        </div>
+        <div class="line-field">
+          <label for="c-email">Email :</label>
+          <input type="email" id="c-email" name="email" autocomplete="email" required />
+        </div>
+        <div class="line-field line-field--message">
+          <label for="c-message">Message :</label>
+          <input type="text" id="c-message" name="message" required />
+        </div>
+        <div class="line-field line-field--bare">
+          <input type="text" id="c-message2" name="message2" aria-label="Message continued" />
+        </div>
+        <div class="contact-submit">
+          <button type="submit" class="btn btn-accent">Send Us a Message</button>
+        </div>
+        <p class="form-msg" id="contact-msg" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="container footer-bottom-inner">
+      <div class="fb-left">
+        <a href="{{ path('app_support') }}">Support &amp; Help</a>
+        <a href="{{ path('app_faq') }}">FAQ</a>
+      </div>
+      <div class="fb-right">
+        <a href="{{ path('app_terms') }}">Terms of services</a>
+        <span class="divider" aria-hidden="true"></span>
+        <a href="{{ path('app_privacy') }}">Privacy Policy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Back to top -->
+<button class="to-top" id="to-top" aria-label="Back to top">↑</button>
+
+<!-- JavaScript -->
+<script>window.ART_BASE = {{ app.request.basePath|json_encode|raw }};</script>
+<script src="{{ asset('js/script.js') }}?v=13"></script>
+</body>
+</html>

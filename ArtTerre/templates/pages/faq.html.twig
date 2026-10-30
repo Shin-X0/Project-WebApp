@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ pageTitle }}{% endblock %}
+
+{% block body %}
+    <section class="page-hero">
+      <div class="container">
+        <h1 class="page-hero-title reveal">{{ heading }}</h1>
+        <p class="page-hero-sub reveal">Everything you need to know about buying and selling on Art Terre.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="auth-card reveal">
+          <h2>Buying</h2>
+          <p>Browse artworks, add pieces to your cart, and check out with a card or cash on delivery. Your order status is updated by the seller as it is processed and shipped.</p>
+          <h2>Selling</h2>
+          <p>Create an artist account, use "Sell artwork" to upload your piece with a title, story, and price, and collect orders from your "My sales" page.</p>
+          <h2>Support</h2>
+          <p>Still need help? Use the contact form below — the admin replies right in your "My messages" page.</p>
+        </div>
+      </div>
+    </section>
+{% endblock %}

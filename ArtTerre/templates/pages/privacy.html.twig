@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ pageTitle }}{% endblock %}
+
+{% block body %}
+    <section class="page-hero">
+      <div class="container">
+        <h1 class="page-hero-title reveal">{{ heading }}</h1>
+        <p class="page-hero-sub reveal">How Art Terre handles your personal information.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="auth-card reveal">
+          <h2>What we collect</h2>
+          <p>Your name, email, date of birth, and — for orders — your delivery address. Uploaded artwork images are stored on our servers.</p>
+          <h2>How we use it</h2>
+          <p>Only to run the marketplace: authentication, order fulfilment, and admin replies to your messages. We never sell your data.</p>
+          <h2>Passwords</h2>
+          <p>Passwords are stored as modern salted hashes and are never visible to anyone, including admins.</p>
+        </div>
+      </div>
+    </section>
+{% endblock %}

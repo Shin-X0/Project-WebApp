@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Welcome Back — Art Terre Creations{% endblock %}
+
+{% block body %}
+    <section class="page-hero">
+      <div class="container">
+        <h1 class="page-hero-title reveal">Welcome Back</h1>
+        <p class="page-hero-sub reveal">Sign in to buy and sell, or create your free Art Terre account.</p>
+      </div>
+    </section>
+
+    <section class="auth-section section" id="signin">
+      <div class="container">
+        <div class="auth-card reveal" data-active-tab="{{ activeTab }}">
+
+          <div class="auth-tabs" role="tablist" aria-label="Sign in or create an account">
+            <button type="button" class="auth-tab{{ activeTab == 'signin' ? ' active' : '' }}" data-tab="signin" role="tab" aria-selected="{{ activeTab == 'signin' ? 'true' : 'false' }}">Login</button>
+            <button type="button" class="auth-tab{{ activeTab == 'register' ? ' active' : '' }}" data-tab="register" role="tab" aria-selected="{{ activeTab == 'register' ? 'true' : 'false' }}">Create Account</button>
+          </div>
+
+          {% if app.request.query.get('registered') == '1' %}
+            <p class="upload-flash" role="status">Account created — sign in with your new credentials.</p>
+          {% endif %}
+
+          <!-- ======================= SIGN IN ======================= -->
+          <form class="auth-form" id="form-signin" method="post" action="{{ path('app_login') }}" novalidate {% if activeTab != 'signin' %}hidden{% endif %}>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" />
+
+            {% if loginError %}<p class="auth-error" role="alert">Sign in failed — check your email and password.</p>{% endif %}
+
+            <div class="field">
+              <label for="si-email">Email</label>
+              <input type="email" id="si-email" name="email" autocomplete="email" required value="{{ lastEmail }}" />
+            </div>
+            <div class="field">
+              <label for="si-password">Password</label>
+              <input type="password" id="si-password" name="password" autocomplete="current-password" required />
+            </div>
+            <button type="submit" class="btn btn-accent auth-submit">Login</button>
+            <p class="auth-switch">New to Art Terre? <a href="#" data-switch="register">Create an account</a></p>
+            <p class="auth-hint">Demo account: demo@artterre.com / password123</p>
+          </form>
+
+          <!-- ======================= CREATE ACCOUNT ======================= -->
+          <form class="auth-form" id="form-register" method="post" action="{{ path('app_register') }}" novalidate {% if activeTab != 'register' %}hidden{% endif %}>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" />
+            <input type="hidden" name="action" value="register" />
+
+            <div class="field">
+              <label for="rg-name">Full name</label>
+              <input type="text" id="rg-name" name="name" autocomplete="name" required value="{{ old.name }}" />
+              {% if errors.name is defined %}<p class="field-error">{{ errors.name }}</p>{% endif %}
+            </div>
+            <div class="field">
+              <label for="rg-email">Email</label>
+              <input type="email" id="rg-email" name="email" autocomplete="email" required value="{{ old.email }}" />
+              {% if errors.email is defined %}<p class="field-error">{{ errors.email }}</p>{% endif %}
+            </div>
+            <div class="field">
+              <label for="rg-password">Password</label>
+              <input type="password" id="rg-password" name="password" autocomplete="new-password" required />
+              {% if errors.password is defined %}<p class="field-error">{{ errors.password }}</p>{% endif %}
+            </div>
+            <div class="field">
+              <label for="rg-password2">Confirm password</label>
+              <input type="password" id="rg-password2" name="password2" autocomplete="new-password" required />
+              {% if errors.password2 is defined %}<p class="field-error">{{ errors.password2 }}</p>{% endif %}
+            </div>
+            <div class="field">
+              <label for="rg-dob">Date of birth</label>
+              <input type="date" id="rg-dob" name="dob" required value="{{ old.dob }}" />
+              {% if errors.dob is defined %}<p class="field-error">{{ errors.dob }}</p>{% endif %}
+            </div>
+            <div class="field">
+              <label for="rg-gender">Gender</label>
+              <select id="rg-gender" name="gender" required>
+                {% for g in ['female', 'male', 'non-binary', 'other', 'prefer-not'] %}
+                  <option value="{{ g }}"{{ old.gender == g ? ' selected' : '' }}>{{ g }}</option>
+                {% endfor %}
+              </select>
+              {% if errors.gender is defined %}<p class="field-error">{{ errors.gender }}</p>{% endif %}
+            </div>
+            <div class="field">
+              <span class="field-label">I want to…</span>
+              <label class="role-option"><input type="radio" name="role" value="collector"{{ old.role != 'artist' ? ' checked' : '' }} /> Buy artwork (collector)</label>
+              <label class="role-option"><input type="radio" name="role" value="artist"{{ old.role == 'artist' ? ' checked' : '' }} /> Sell artwork (artist)</label>
+            </div>
+            <button type="submit" class="btn btn-accent auth-submit">Create Account</button>
+            <p class="auth-switch">Already have an account? <a href="#" data-switch="signin">Sign in</a></p>
+          </form>
+
+        </div>
+      </div>
+    </section>
+{% endblock %}

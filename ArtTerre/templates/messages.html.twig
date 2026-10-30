@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Messages — Art Terre Creations{% endblock %}
+
+{% block body %}
+    <section class="page-hero">
+      <div class="container">
+        <h1 class="page-hero-title reveal">My Messages</h1>
+        <p class="page-hero-sub reveal">Your conversations with the Art Terre team.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        {% if messages is empty %}
+          <p class="reveal">You have not sent any messages yet — the contact form is in the footer.</p>
+        {% endif %}
+
+        {% for message in messages %}
+          <div class="auth-card reveal">
+            <h2 class="cart-summary-title">{{ message.name }} <small class="muted">{{ message.createdAt|date('M j, Y H:i') }}</small></h2>
+            <p>{{ message.message }}</p>
+
+            {% if message.reply %}
+              <p class="upload-flash" role="status">
+                <strong>Reply from Art Terre:</strong> {{ message.reply }}
+                <em>({{ message.repliedAt ? message.repliedAt|date('M j, Y H:i') : '' }})</em>
+              </p>
+            {% else %}
+              <p class="order-note">Awaiting a reply from the admin.</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+{% endblock %}

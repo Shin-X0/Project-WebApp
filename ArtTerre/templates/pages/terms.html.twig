@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ pageTitle }}{% endblock %}
+
+{% block body %}
+    <section class="page-hero">
+      <div class="container">
+        <h1 class="page-hero-title reveal">{{ heading }}</h1>
+        <p class="page-hero-sub reveal">The rules that keep Art Terre fair for artists and collectors.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="auth-card reveal">
+          <h2>Accounts</h2>
+          <p>You must be 13 or older to create an account. Sellers are sell-only and cannot buy through their own storefront.</p>
+          <h2>Orders</h2>
+          <p>Once an order is placed, the seller updates its status: pending, processing, shipped, delivered, or cancelled.</p>
+          <h2>Content</h2>
+          <p>Artists are responsible for the artworks they upload and must hold the rights to them.</p>
+        </div>
+      </div>
+    </section>
+{% endblock %}

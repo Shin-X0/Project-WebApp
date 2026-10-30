@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Orders — Art Terre Creations{% endblock %}
+
+{% block body %}
+    <section class="page-hero">
+      <div class="container">
+        <h1 class="page-hero-title reveal">My Orders</h1>
+        <p class="page-hero-sub reveal">Buyers can track their orders — status updates come from the seller or admin.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        {% if orders is empty %}
+          <p class="reveal">You have not placed any orders yet.</p>
+        {% endif %}
+
+        {% for order in orders %}
+          <div class="auth-card reveal">
+            <h2 class="cart-summary-title">Order {{ order.orderNo }}</h2>
+            <p class="order-note">
+              Status: <strong>{{ order.status }}</strong> — placed {{ order.createdAt|date('M j, Y') }} · total ${{ order.total }} · {{ order.paymentMethod == 'card' ? 'Card' : 'Cash on delivery' }}
+            </p>
+            <ul>
+              {% for item in order.items %}
+                <li>{{ item.qty }} × {{ item.title }} — ${{ item.price }}{% if item.artistName %} by {{ item.artistName }}{% endif %}</li>
+              {% endfor %}
+            </ul>
+            <a class="btn btn-outline" href="{{ path('app_order_pending', { no: order.orderNo }) }}">View order</a>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+{% endblock %}

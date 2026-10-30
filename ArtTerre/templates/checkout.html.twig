@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Checkout — Art Terre Creations{% endblock %}
+
+{% block body %}
+    <section class="page-hero">
+      <div class="container">
+        <h1 class="page-hero-title reveal">Checkout</h1>
+        <p class="page-hero-sub reveal">Tell us where to deliver your art — pay by card or cash on delivery.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="auth-card reveal">
+          <form class="auth-form" id="checkout-form" method="post" action="{{ path('app_checkout_submit') }}" novalidate>
+            <div class="field">
+              <label for="co-name">Full name</label>
+              <input type="text" id="co-name" name="name" autocomplete="name" required value="{{ app.user ? app.user.name : '' }}" />
+            </div>
+            <div class="field">
+              <label for="co-email">Email</label>
+              <input type="email" id="co-email" name="email" autocomplete="email" required value="{{ app.user ? app.user.email : '' }}" />
+            </div>
+            <div class="field">
+              <label for="co-address">Delivery address</label>
+              <input type="text" id="co-address" name="address" autocomplete="street-address" required />
+            </div>
+            <div class="field">
+              <label for="co-city">City</label>
+              <input type="text" id="co-city" name="city" autocomplete="address-level2" />
+            </div>
+            <div class="field">
+              <label for="co-zip">ZIP</label>
+              <input type="text" id="co-zip" name="zip" autocomplete="postal-code" />
+            </div>
+            <div class="field">
+              <span class="field-label">Payment method</span>
+              <label class="role-option"><input type="radio" name="payment" value="card" /> Card</label>
+              <label class="role-option"><input type="radio" name="payment" value="cod" checked /> Cash on delivery</label>
+            </div>
+            <div class="field" id="card-fields" hidden>
+              <label for="co-card">Card number</label>
+              <input type="text" id="co-card" name="card" inputmode="numeric" autocomplete="cc-number" />
+              <label for="co-expiry">Expiry (MM/YY)</label>
+              <input type="text" id="co-expiry" name="expiry" autocomplete="cc-exp" placeholder="MM/YY" />
+              <label for="co-cvv">CVV</label>
+              <input type="password" id="co-cvv" name="cvv" inputmode="numeric" />
+            </div>
+
+            <input type="hidden" name="cart_json" id="cart_json" value="[]" />
+            <button type="submit" class="btn btn-accent auth-submit">Place order</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      /* Snapshot the localStorage cart into the hidden field on submit
+         (same contract the old checkout.php relied on). */
+      document.getElementById('checkout-form').addEventListener('submit', function () {
+        try {
+          var cart = JSON.parse(localStorage.getItem('art-terre-cart') || '[]');
+          if (!Array.isArray(cart)) { cart = []; }
+          document.getElementById('cart_json').value = JSON.stringify(cart);
+        } catch (e) {
+          document.getElementById('cart_json').value = '[]';
+        }
+      });
+      var payRadios = document.querySelectorAll('input[name="payment"]');
+      var cardFields = document.getElementById('card-fields');
+      payRadios.forEach(function (radio) {
+        radio.addEventListener('change', function () {
+          cardFields.hidden = this.value !== 'card' || !this.checked;
+        });
+      });
+    </script>
+{% endblock %}

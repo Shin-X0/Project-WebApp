@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Order {{ order.orderNo }} — Art Terre Creations{% endblock %}
+
+{% block body %}
+    <section class="page-hero">
+      <div class="container">
+        <h1 class="page-hero-title reveal">Order Pending — {{ order.orderNo }}</h1>
+        <p class="page-hero-sub reveal">Thank you, {{ order.name }}! Your order has been received.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="auth-card reveal">
+          <h2 class="cart-summary-title">Order {{ order.orderNo }}</h2>
+          <p class="order-note">
+            Status: <strong>{{ order.status }}</strong> — payment: {{ order.paymentMethod == 'card' ? 'Card' : 'Cash on delivery' }} · total ${{ order.total }}
+          </p>
+          <p>
+            {{ order.name }} · {{ order.email }}<br />
+            {{ order.address }}{% if order.city %}, {{ order.city }}{% endif %}{% if order.zip %} {{ order.zip }}{% endif %}
+          </p>
+          <ul>
+            {% for item in order.items %}
+              <li>{{ item.qty }} × {{ item.title }} — ${{ item.price }}{% if item.artistName %} by {{ item.artistName }}{% endif %}</li>
+            {% endfor %}
+          </ul>
+
+          {% if canUpdate %}
+            <form class="order-status-form" method="post" action="{{ path('app_order_pending_status', { no: order.orderNo }) }}">
+              <div class="field">
+                <label for="status">Update status</label>
+                <select name="status" id="status" required>
+                  {% for status in statuses %}
+                    <option value="{{ status }}"{{ order.status == status ? ' selected' : '' }}>{{ status }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <button type="submit" class="btn btn-accent">Update status</button>
+            </form>
+          {% else %}
+            <p class="order-note">Buyers are view-only — the seller or an admin updates the status.</p>
+          {% endif %}
+        </div>
+      </div>
+    </section>
+{% endblock %}

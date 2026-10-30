@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}All Artworks — Art Terre Creations{% endblock %}
+
+{% block body %}
+    <section class="page-hero">
+      <div class="container">
+        <h1 class="page-hero-title reveal">Artworks</h1>
+        <p class="page-hero-sub reveal">Browse every available piece — filter by category.</p>
+      </div>
+    </section>
+
+    <section class="artworks section">
+      <div class="container">
+        <div class="filters reveal">
+          <a class="filter-btn{{ category == 'all' ? ' active' : '' }}" href="{{ path('app_artworks') }}">All</a>
+          <a class="filter-btn{{ category == 'painting' ? ' active' : '' }}" href="{{ path('app_artworks', { category: 'painting' }) }}">Painting</a>
+          <a class="filter-btn{{ category == 'photography' ? ' active' : '' }}" href="{{ path('app_artworks', { category: 'photography' }) }}">Photography</a>
+        </div>
+
+        <div class="artwork-grid">
+          {% for artwork in artworks %}
+            <article class="artwork-card reveal" data-category="{{ artwork.category }}">
+              <div class="artwork-media">
+                {% if artwork.imagePath %}
+                  <img src="{{ asset('images/' ~ artwork.imagePath) }}" alt="{{ artwork.title }}" />
+                {% else %}
+                  <span class="art art-dusk"></span>
+                {% endif %}
+              </div>
+              <h3 class="artwork-title">{{ artwork.title }}</h3>
+              <p class="artwork-artist">by <strong>{{ artwork.artist.name }}</strong></p>
+              {% if artwork.story %}
+                <p class="artwork-story">{{ artwork.story }}</p>
+              {% endif %}
+              <div class="artwork-actions">
+                {% if artwork.story %}<button class="story-toggle" type="button" aria-expanded="false">Story.</button>{% endif %}
+                <div class="artwork-buy">
+                  <span class="artwork-price">${{ artwork.price }}</span>
+                  <button class="btn btn-accent card-checkout" type="button"
+                          aria-label="Checkout “{{ artwork.title }}”"
+                          data-title="{{ artwork.title }}"
+                          data-artist="{{ artwork.artist.name }}"
+                          data-price="{{ artwork.price }}"
+                          data-artwork-id="{{ artwork.id }}">Checkout</button>
+                  <button class="card-cart" type="button" aria-label="Add “{{ artwork.title }}” to cart"
+                          data-title="{{ artwork.title }}"
+                          data-artist="{{ artwork.artist.name }}"
+                          data-price="{{ artwork.price }}"
+                          data-artwork-id="{{ artwork.id }}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/>
+                      <path d="M2.5 3.5h2.6l2.5 11.2a1.8 1.8 0 0 0 1.8 1.4h7.9a1.8 1.8 0 0 0 1.8-1.4L21 7.5H6.1"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </article>
+          {% else %}
+            <p class="reveal">No artworks available yet — artists will upload soon.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+{% endblock %}

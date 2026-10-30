@@ -1,0 +1,22 @@
+### Symfony
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+/.phpunit.cache/
+
+### Legacy Art Terre site
+/legacy/admin/admin-hash.txt
+/legacy/db/
+/legacy/images/uploads/
+
+### IDE / OS junk
+/.idea/
+/.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+Desktop.ini

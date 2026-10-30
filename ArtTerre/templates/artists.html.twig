@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}All Artists — Art Terre Creations{% endblock %}
+
+{% block body %}
+    <section class="page-hero">
+      <div class="container">
+        <h1 class="page-hero-title reveal">Artists</h1>
+        <p class="page-hero-sub reveal">Meet the creative voices of Art Terre.</p>
+      </div>
+    </section>
+
+    <section class="artists section">
+      <div class="container">
+        <div class="artist-grid">
+          {% for entry in artists %}
+            {% set user = entry.user %}
+            <article class="artist-card reveal">
+              <div class="artist-photo"><span class="artist-initials">{{ user.name|slice(0, 2)|upper }}</span></div>
+              <div class="artist-foot">
+                <h3 class="artist-name">{{ user.name }}</h3>
+                <p class="order-note">{{ entry.artworkCount }} artwork{{ entry.artworkCount == 1 ? '' : 's' }}</p>
+              </div>
+            </article>
+          {% else %}
+            <p class="reveal">No artists have joined yet.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+{% endblock %}

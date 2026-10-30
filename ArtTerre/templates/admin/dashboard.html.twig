@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Dashboard — Art Terre Creations{% endblock %}
+
+{% block body %}
+    <section class="page-hero">
+      <div class="container">
+        <h1 class="page-hero-title reveal">Admin Dashboard</h1>
+        <p class="page-hero-sub reveal">Manage users, orders, and the contact inbox.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="artist-grid">
+          <article class="artist-card reveal">
+            <div class="artist-photo"><span class="artist-initials">{{ userCount }}</span></div>
+            <div class="artist-foot"><h3 class="artist-name">Users</h3></div>
+          </article>
+          <article class="artist-card reveal">
+            <div class="artist-photo"><span class="artist-initials">{{ artistCount }}</span></div>
+            <div class="artist-foot"><h3 class="artist-name">Artists</h3></div>
+          </article>
+          <article class="artist-card reveal">
+            <div class="artist-photo"><span class="artist-initials">{{ artworkCount }}</span></div>
+            <div class="artist-foot"><h3 class="artist-name">Artworks</h3></div>
+          </article>
+          <article class="artist-card reveal">
+            <div class="artist-photo"><span class="artist-initials">{{ orderCount }}</span></div>
+            <div class="artist-foot"><h3 class="artist-name">Orders</h3></div>
+          </article>
+          <article class="artist-card reveal">
+            <div class="artist-photo"><span class="artist-initials">{{ messageCount }}</span></div>
+            <div class="artist-foot"><h3 class="artist-name">Unread messages</h3></div>
+          </article>
+        </div>
+
+        <div class="section-cta reveal">
+          <a href="{{ path('app_admin_users_index') }}" class="btn btn-outline">Manage users</a>
+          <a href="{{ path('app_admin_orders_index') }}" class="btn btn-outline">Manage orders</a>
+          <a href="{{ path('app_admin_messages_index') }}" class="btn btn-outline">Inbox</a>
+          <a href="{{ path('app_admin_artworks_index') }}" class="btn btn-outline">Manage artworks</a>
+        </div>
+      </div>
+    </section>
+{% endblock %}

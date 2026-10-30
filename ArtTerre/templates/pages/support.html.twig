@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ pageTitle }}{% endblock %}
+
+{% block body %}
+    <section class="page-hero">
+      <div class="container">
+        <h1 class="page-hero-title reveal">{{ heading }}</h1>
+        <p class="page-hero-sub reveal">Stuck? Here's how to get help fast.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="auth-card reveal">
+          <h2>Contact the admin</h2>
+          <p>Use the contact form below — replies land in your "My messages" page within one business day.</p>
+          <h2>Common fixes</h2>
+          <p>Locked out of sign-in? The lock lifts after 5 minutes. Cart not loading? Your browser's localStorage may be disabled.</p>
+          <h2>FAQ</h2>
+          <p>Most product questions are answered on the <a href="{{ path('app_faq') }}">FAQ page</a>.</p>
+        </div>
+      </div>
+    </section>
+{% endblock %}
