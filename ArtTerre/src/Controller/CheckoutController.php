@@ -24,7 +24,7 @@ class CheckoutController extends AbstractController
     {
     }
 
-    #[Route('/checkout', name: 'app_checkout')]
+    #[Route('/checkout', name: 'app_checkout', methods: ['GET'])]
     public function index(): Response
     {
         if ($viewer = $this->getUser()) {

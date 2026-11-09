@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -48,7 +49,8 @@ class LoginController extends AbstractController
     #[Route('/register', name: 'app_register', methods: ['POST'])]
     public function register(Request $request, CsrfTokenManagerInterface $csrf): Response
     {
-        if (!$csrf->isTokenValid('authenticate', (string) $request->request->get('_csrf_token', ''))) {
+        $token = new CsrfToken('authenticate', (string) $request->request->get('_csrf_token', ''));
+        if (!$csrf->isTokenValid($token)) {
             return $this->redirectToRoute('app_login');
         }
 

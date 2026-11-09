@@ -1,0 +1,92 @@
+{# templates/admin/layout.html.twig #}
+{# Admin layout shell: top bar with navigation, clean content area. #}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Admin — Art Terre Creations{% endblock %}</title>
+  <meta name="description" content="Admin dashboard for Art Terre Creations" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ asset('css/admin.css') }}?v=2" />
+</head>
+<body>
+
+{% set route = app.current_route %}
+{# Route prefixes per section so the matching nav item can be highlighted. #}
+{% set navItems = [
+  { label: 'Dashboard', icon: 'grid',     prefix: 'app_admin_dashboard', path: 'app_admin_dashboard' },
+  { label: 'Users',     icon: 'users',    prefix: 'app_admin_users',     path: 'app_admin_users_index' },
+  { label: 'Orders',    icon: 'orders',   prefix: 'app_admin_orders',    path: 'app_admin_orders_index' },
+  { label: 'Messages',  icon: 'messages', prefix: 'app_admin_messages',  path: 'app_admin_messages_index' },
+  { label: 'Artworks',  icon: 'artworks', prefix: 'app_admin_artworks',  path: 'app_admin_artworks_index' }
+] %}
+
+<div class="admin-layout">
+
+  <!-- ============ TOP BAR ============ -->
+  <header class="admin-topbar">
+    <div class="topbar-inner">
+      <a href="{{ path('app_admin_dashboard') }}" class="admin-brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 22h18z"/><path d="M12 2v20"/></svg>
+        </span>
+        <span class="brand-name">Admin</span>
+      </a>
+
+      <nav class="admin-nav" aria-label="Admin navigation">
+        {% for item in navItems %}
+          {% set isActive = route and route starts with item.prefix %}
+          <a href="{{ path(item.path) }}"
+             class="{{ isActive ? 'active' : '' }}"
+             {% if isActive %}aria-current="page"{% endif %}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              {% if item.icon == 'grid' %}
+                <rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>
+              {% elseif item.icon == 'users' %}
+                <path d="M16 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="3.2"/><path d="M22 20v-2a4 4 0 0 0-3-3.87"/><path d="M16.5 4.2a3.2 3.2 0 0 1 0 5.6"/>
+              {% elseif item.icon == 'orders' %}
+                <path d="M6 2 4 6v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6l-2-4z"/><path d="M4 6h16"/><path d="M16 10a4 4 0 0 1-8 0"/>
+              {% elseif item.icon == 'messages' %}
+                <rect x="2" y="4" width="20" height="16" rx="2.5"/><path d="m2.5 6.5 9.5 7 9.5-7"/>
+              {% else %}
+                <path d="M12 3 2 21h20z"/><path d="M12 9v6"/><path d="M12 18.2v.1"/>
+              {% endif %}
+            </svg>
+            <span class="label">{{ item.label }}</span>
+          </a>
+        {% endfor %}
+      </nav>
+
+      <div class="admin-topbar-account">
+        {% if app.user %}
+          {% set firstName = app.user.name|trim|split(' ')|first %}
+          {% set initial = app.user.name|first|upper %}
+          <div class="admin-account" title="{{ app.user.name }} — {{ app.user.email }}">
+            <span class="admin-avatar">{{ initial }}</span>
+            <span class="ac-meta">
+              <span class="ac-name">{{ firstName }}</span>
+              <span class="ac-email">{{ app.user.email }}</span>
+            </span>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ MAIN CONTENT ============ -->
+  <main class="admin-main">
+    <div class="admin-container">
+      {% block body %}{% endblock %}
+    </div>
+  </main>
+
+</div>
+
+<!-- JavaScript -->
+<script src="{{ asset('js/admin.js') }}?v=2" defer></script>
+</body>
+</html>

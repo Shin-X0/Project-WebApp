@@ -23,7 +23,7 @@
             <article class="artwork-card reveal" data-category="{{ artwork.category }}">
               <div class="artwork-media">
                 {% if artwork.imagePath %}
-                  <img src="{{ asset('images/' ~ artwork.imagePath) }}" alt="{{ artwork.title }}" />
+                  <img src="{{ asset(artwork.imagePath) }}" alt="{{ artwork.title }}" />
                 {% else %}
                   <span class="art art-dusk"></span>
                 {% endif %}

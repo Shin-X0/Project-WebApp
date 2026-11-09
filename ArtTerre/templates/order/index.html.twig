@@ -1,53 +1,71 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/layout.html.twig' %}
 
-{% block title %}Order index{% endblock %}
+{% block title %}Orders — Admin{% endblock %}
 
 {% block body %}
-    <h1>Order index</h1>
+  <header class="admin-header">
+    <h1>Manage Orders</h1>
+    <div class="admin-actions">
+      <a href="{{ path('app_admin_orders_new') }}" class="btn">
+        <span class="icon">&#9783;</span>
+        <span>New Order</span>
+      </a>
+    </div>
+  </header>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>OrderNo</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Address</th>
-                <th>City</th>
-                <th>Zip</th>
-                <th>PaymentMethod</th>
-                <th>Status</th>
-                <th>Total</th>
-                <th>CreatedAt</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for order in orders %}
-            <tr>
-                <td>{{ order.id }}</td>
-                <td>{{ order.orderNo }}</td>
-                <td>{{ order.name }}</td>
-                <td>{{ order.email }}</td>
-                <td>{{ order.address }}</td>
-                <td>{{ order.city }}</td>
-                <td>{{ order.zip }}</td>
-                <td>{{ order.paymentMethod }}</td>
-                <td>{{ order.status }}</td>
-                <td>{{ order.total }}</td>
-                <td>{{ order.createdAt ? order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_order_show', {'id': order.id}) }}">show</a>
-                    <a href="{{ path('app_order_edit', {'id': order.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="12">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
+  <div class="admin-table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Order #</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Address</th>
+          <th>City</th>
+          <th>Zip</th>
+          <th>Method</th>
+          <th>Status</th>
+          <th>Total</th>
+          <th>Created At</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for order in orders %}
+        <tr>
+          <td class="cell-mono">{{ order.id }}</td>
+          <td class="cell-mono">{{ order.orderNo }}</td>
+          <td>{{ order.name }}</td>
+          <td class="cell-muted">{{ order.email }}</td>
+          <td class="cell-muted">{{ order.address }}</td>
+          <td class="cell-muted">{{ order.city }}</td>
+          <td class="cell-mono">{{ order.zip }}</td>
+          <td class="cell-muted">{{ order.paymentMethod }}</td>
+          <td><span class="admin-badge badge-{{ order.status }}">{{ order.status }}</span></td>
+          <td class="cell-mono">{{ order.total }}</td>
+          <td class="cell-muted">{{ order.createdAt ? order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+          <td class="admin-actions-cell">
+            <a href="{{ path('app_admin_orders_show', {'id': order.id}) }}" class="btn btn-sm">Show</a>
+            <a href="{{ path('app_admin_orders_edit', {'id': order.id}) }}" class="btn btn-sm">Edit</a>
+          </td>
+        </tr>
+      {% else %}
+        <tr>
+          <td colspan="12" class="cell-muted">No orders found</td>
+        </tr>
+      {% endfor %}
+      </tbody>
     </table>
+  </div>
 
-    <a href="{{ path('app_order_new') }}">Create new</a>
+  <div class="admin-pagination">
+    <div class="pagination-links">
+      <a href="{{ path('app_admin_orders_new') }}" class="btn btn-sm">
+        <span class="icon">&#9783;</span>
+        <span>New Order</span>
+      </a>
+    </div>
+    <div class="results-count">{{ orders|length }} orders</div>
+  </div>
 {% endblock %}

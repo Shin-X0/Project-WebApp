@@ -272,7 +272,7 @@ $$(".card-checkout").forEach((btn) => {
   btn.addEventListener("click", () => {
     const card = btn.closest(".artwork-card");
     if (card) addToCart(card);
-    window.location.href = "checkout.php";
+    window.location.href = "/checkout";
   });
 });
 
@@ -287,7 +287,7 @@ updateCartCount();
    ============================================================ */
 const isLoggedIn = !!document.getElementById("account-menu");
 let cartSaveTimer = null;
-const CART_SYNC_URL = (window.ART_BASE || "") + "pages/cart-sync.php";
+const CART_SYNC_URL = (window.ART_BASE || "") + "/cart-sync";
 
 function queueCartSave() {
   if (!isLoggedIn) return;
@@ -357,6 +357,7 @@ if (isLoggedIn) loadCartFromDB();
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function setMsg(el, text, type) {
+  if (!el) return;
   el.textContent = text;
   el.classList.remove("success", "error");
   if (type) el.classList.add(type);

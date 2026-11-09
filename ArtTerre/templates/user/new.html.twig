@@ -1,11 +1,55 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/layout.html.twig' %}
 
-{% block title %}New User{% endblock %}
+{% block title %}New User — Admin{% endblock %}
 
 {% block body %}
-    <h1>Create new User</h1>
+  <header class="admin-header">
+    <h1>Add User</h1>
+  </header>
 
-    {{ include('user/_form.html.twig') }}
-
-    <a href="{{ path('app_user_index') }}">back to list</a>
+  <div class="admin-form">
+    <h3 class="form-title">User Details</h3>
+    {{ form_start(form) }}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-row">
+            <label for="name">Name</label>
+            {{ form_widget(form.name) }}
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-row">
+            <label for="email">Email</label>
+            {{ form_widget(form.email) }}
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-row">
+            <label for="password">Password</label>
+            {{ form_widget(form.password) }}
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-row">
+            <label for="role">Role</label>
+            {{ form_widget(form.role) }}
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <label for="dob">Date of Birth</label>
+        {{ form_widget(form.dob) }}
+      </div>
+      <div class="form-row">
+        <label for="gender">Gender</label>
+        {{ form_widget(form.gender) }}
+      </div>
+      <div class="btn-row">
+        <button type="submit" class="btn">Save User</button>
+        <a href="{{ path('app_admin_users_index') }}" class="btn">Cancel</a>
+      </div>
+    {{ form_end(form) }}
+  </div>
 {% endblock %}

@@ -1,62 +1,37 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/layout.html.twig' %}
 
-{% block title %}Order{% endblock %}
+{% block title %}Order — Admin{% endblock %}
 
 {% block body %}
-    <h1>Order</h1>
+  <header class="admin-header">
+    <h1>Order Details</h1>
+    <div class="admin-actions">
+      <a href="{{ path('app_admin_orders_edit', {'id': order.id}) }}" class="btn">
+        <span class="icon">&#9998;</span>
+        <span>Edit</span>
+      </a>
+      <a href="{{ path('app_admin_orders_index') }}" class="btn">
+        <span class="icon">&#8592;</span>
+        <span>Back to list</span>
+      </a>
+    </div>
+  </header>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ order.id }}</td>
-            </tr>
-            <tr>
-                <th>OrderNo</th>
-                <td>{{ order.orderNo }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ order.name }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ order.email }}</td>
-            </tr>
-            <tr>
-                <th>Address</th>
-                <td>{{ order.address }}</td>
-            </tr>
-            <tr>
-                <th>City</th>
-                <td>{{ order.city }}</td>
-            </tr>
-            <tr>
-                <th>Zip</th>
-                <td>{{ order.zip }}</td>
-            </tr>
-            <tr>
-                <th>PaymentMethod</th>
-                <td>{{ order.paymentMethod }}</td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td>{{ order.status }}</td>
-            </tr>
-            <tr>
-                <th>Total</th>
-                <td>{{ order.total }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ order.createdAt ? order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
+  <div class="admin-form">
+    <table class="admin-table">
+      <tbody>
+        <tr><th>Id</th><td>{{ order.id }}</td></tr>
+        <tr><th>Order #</th><td class="cell-mono">{{ order.orderNo }}</td></tr>
+        <tr><th>Name</th><td>{{ order.name }}</td></tr>
+        <tr><th>Email</th><td class="cell-muted">{{ order.email }}</td></tr>
+        <tr><th>Address</th><td>{{ order.address }}</td></tr>
+        <tr><th>City</th><td>{{ order.city }}</td></tr>
+        <tr><th>Zip</th><td class="cell-mono">{{ order.zip }}</td></tr>
+        <tr><th>Method</th><td>{{ order.paymentMethod }}</td></tr>
+        <tr><th>Status</th><td><span class="admin-badge badge-{{ order.status }}">{{ order.status }}</span></td></tr>
+        <tr><th>Total</th><td class="cell-mono">{{ order.total }}</td></tr>
+        <tr><th>Created At</th><td class="cell-muted">{{ order.createdAt ? order.createdAt|date('Y-m-d H:i:s') : '' }}</td></tr>
+      </tbody>
     </table>
-
-    <a href="{{ path('app_order_index') }}">back to list</a>
-
-    <a href="{{ path('app_order_edit', {'id': order.id}) }}">edit</a>
-
-    {{ include('order/_delete_form.html.twig') }}
+  </div>
 {% endblock %}

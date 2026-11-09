@@ -14,6 +14,7 @@
       <div class="container">
         <div class="auth-card reveal">
           <form class="auth-form" method="post" action="{{ path('app_upload_artwork_submit') }}" enctype="multipart/form-data" novalidate>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" />
             <div class="field">
               <label for="up-title">Title</label>
               <input type="text" id="up-title" name="title" required value="{{ old.title ?? '' }}" />
@@ -22,8 +23,8 @@
             <div class="field">
               <label for="up-category">Category</label>
               <select id="up-category" name="category">
-                <option value="painting"{{ old.category != 'photography' ? ' selected' : '' }}>Painting</option>
-                <option value="photography"{{ old.category == 'photography' ? ' selected' : '' }}>Photography</option>
+                <option value="painting"{% if old.category ?? '' == 'painting' %} selected{% endif %}>Painting</option>
+                <option value="photography"{% if old.category ?? '' == 'photography' %} selected{% endif %}>Photography</option>
               </select>
               {% if errors.category is defined %}<p class="field-error">{{ errors.category }}</p>{% endif %}
             </div>

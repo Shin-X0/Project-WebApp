@@ -23,7 +23,7 @@ class UploadArtworkController extends AbstractController
     {
     }
 
-    #[Route('/upload-artwork', name: 'app_upload_artwork')]
+    #[Route('/upload-artwork', name: 'app_upload_artwork', methods: ['GET'])]
     #[IsGranted('ROLE_ARTIST')]
     public function index(): Response
     {
@@ -56,16 +56,28 @@ class UploadArtworkController extends AbstractController
         $imagePath = null;
         $file = $request->files->get('image');
         if ($file) {
-            if (!in_array($file->getMimeType(), self::ALLOWED_MIMES, true)) {
+            $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+            $fileExt = strtolower($file->getClientOriginalExtension() ?: '');
+
+            // Try MIME type check; fall back to extension if fileinfo is unavailable
+            $mimeOk = true;
+            try {
+                $mimeOk = in_array($file->getMimeType(), self::ALLOWED_MIMES, true);
+            } catch (\LogicException $e) {
+                // fileinfo extension not loaded — fall back to extension check
+                $mimeOk = in_array($fileExt, $allowedExtensions, true);
+            }
+
+            if (!$mimeOk) {
                 $errors['image'] = 'Only JPG, PNG, WEBP, or GIF images are allowed.';
             } elseif ($file->getSize() > 4 * 1024 * 1024) {
                 $errors['image'] = 'Image is too large — 4 MB maximum.';
             } else {
-                $dir = 'public/' . self::UPLOAD_DIR;
+                $dir = __DIR__ . '/../../public/' . self::UPLOAD_DIR;
                 if (!is_dir($dir)) {
                     mkdir($dir, 0777, true);
                 }
-                $filename = date('Ymd_His') . '_' . bin2hex(random_bytes(6)) . '.' . strtolower($file->getClientOriginalExtension() ?: 'jpg');
+                $filename = date('Ymd_His') . '_' . bin2hex(random_bytes(6)) . '.' . ($fileExt ?: 'jpg');
                 $file->move($dir, $filename);
                 $imagePath = self::UPLOAD_DIR . '/' . $filename;
             }

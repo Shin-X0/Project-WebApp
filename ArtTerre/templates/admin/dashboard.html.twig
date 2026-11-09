@@ -1,46 +1,55 @@
-{% extends 'base.html.twig' %}
+﻿{% extends 'admin/layout.html.twig' %}
 
-{% block title %}Admin Dashboard — Art Terre Creations{% endblock %}
+{% block title %}Dashboard — Admin{% endblock %}
 
 {% block body %}
-    <section class="page-hero">
-      <div class="container">
-        <h1 class="page-hero-title reveal">Admin Dashboard</h1>
-        <p class="page-hero-sub reveal">Manage users, orders, and the contact inbox.</p>
-      </div>
-    </section>
+  <header class="admin-header">
+    <h1>Dashboard</h1>
+    <div class="admin-actions">
+      <a href="{{ path('app_admin_users_index') }}" class="btn">
+        <span class="icon">&#9783;</span>
+        <span>Manage Users</span>
+      </a>
+      <a href="{{ path('app_admin_orders_index') }}" class="btn">
+        <span class="icon">&#9670;</span>
+        <span>Manage Orders</span>
+      </a>
+      <a href="{{ path('app_admin_messages_index') }}" class="btn">
+        <span class="icon">&#10003;</span>
+        <span>Open Inbox</span>
+      </a>
+      <a href="{{ path('app_admin_artworks_index') }}" class="btn">
+        <span class="icon">&#9650;</span>
+        <span>Manage Artworks</span>
+      </a>
+    </div>
+  </header>
 
-    <section class="section">
-      <div class="container">
-        <div class="artist-grid">
-          <article class="artist-card reveal">
-            <div class="artist-photo"><span class="artist-initials">{{ userCount }}</span></div>
-            <div class="artist-foot"><h3 class="artist-name">Users</h3></div>
-          </article>
-          <article class="artist-card reveal">
-            <div class="artist-photo"><span class="artist-initials">{{ artistCount }}</span></div>
-            <div class="artist-foot"><h3 class="artist-name">Artists</h3></div>
-          </article>
-          <article class="artist-card reveal">
-            <div class="artist-photo"><span class="artist-initials">{{ artworkCount }}</span></div>
-            <div class="artist-foot"><h3 class="artist-name">Artworks</h3></div>
-          </article>
-          <article class="artist-card reveal">
-            <div class="artist-photo"><span class="artist-initials">{{ orderCount }}</span></div>
-            <div class="artist-foot"><h3 class="artist-name">Orders</h3></div>
-          </article>
-          <article class="artist-card reveal">
-            <div class="artist-photo"><span class="artist-initials">{{ messageCount }}</span></div>
-            <div class="artist-foot"><h3 class="artist-name">Unread messages</h3></div>
-          </article>
-        </div>
-
-        <div class="section-cta reveal">
-          <a href="{{ path('app_admin_users_index') }}" class="btn btn-outline">Manage users</a>
-          <a href="{{ path('app_admin_orders_index') }}" class="btn btn-outline">Manage orders</a>
-          <a href="{{ path('app_admin_messages_index') }}" class="btn btn-outline">Inbox</a>
-          <a href="{{ path('app_admin_artworks_index') }}" class="btn btn-outline">Manage artworks</a>
-        </div>
-      </div>
-    </section>
+  <div class="admin-card-grid">
+    <article class="admin-card">
+      <div class="card-label">Users</div>
+      <div class="card-value">{{ userCount }}</div>
+      <div class="card-sub">Total registered users</div>
+    </article>
+    <article class="admin-card">
+      <div class="card-label">Artists</div>
+      <div class="card-value accent">{{ artistCount }}</div>
+      <div class="card-sub">Users with artist role</div>
+    </article>
+    <article class="admin-card">
+      <div class="card-label">Artworks</div>
+      <div class="card-value clay">{{ artworkCount }}</div>
+      <div class="card-sub">Available for sale</div>
+    </article>
+    <article class="admin-card">
+      <div class="card-label">Orders</div>
+      <div class="card-value">{{ orderCount }}</div>
+      <div class="card-sub">All orders processed</div>
+    </article>
+    <article class="admin-card">
+      <div class="card-label">Unread messages</div>
+      <div class="card-value danger">{{ messageCount }}</div>
+      <div class="card-sub">Messages awaiting reply</div>
+    </article>
+  </div>
 {% endblock %}

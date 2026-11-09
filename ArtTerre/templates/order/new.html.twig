@@ -1,11 +1,69 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/layout.html.twig' %}
 
-{% block title %}New Order{% endblock %}
+{% block title %}New Order — Admin{% endblock %}
 
 {% block body %}
-    <h1>Create new Order</h1>
+  <header class="admin-header">
+    <h1>New Order</h1>
+  </header>
 
-    {{ include('order/_form.html.twig') }}
-
-    <a href="{{ path('app_order_index') }}">back to list</a>
+  <div class="admin-form">
+    <h3 class="form-title">Order Details</h3>
+    {{ form_start(form) }}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-row">
+            <label for="name">Name</label>
+            {{ form_widget(form.name) }}
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-row">
+            <label for="email">Email</label>
+            {{ form_widget(form.email) }}
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-row">
+            <label for="address">Address</label>
+            {{ form_widget(form.address) }}
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-row">
+            <label for="city">City</label>
+            {{ form_widget(form.city) }}
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-row">
+            <label for="zip">Zip</label>
+            {{ form_widget(form.zip) }}
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-row">
+            <label for="paymentMethod">Payment Method</label>
+            {{ form_widget(form.paymentMethod) }}
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <label for="status">Status</label>
+        {{ form_widget(form.status) }}
+      </div>
+      <div class="form-row">
+        <label for="total">Total</label>
+        {{ form_widget(form.total) }}
+      </div>
+      <div class="btn-row">
+        <button type="submit" class="btn">Save Order</button>
+        <a href="{{ path('app_admin_orders_index') }}" class="btn">Cancel</a>
+      </div>
+    {{ form_end(form) }}
+  </div>
 {% endblock %}

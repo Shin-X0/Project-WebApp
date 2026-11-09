@@ -48,7 +48,10 @@
               <input type="password" id="co-cvv" name="cvv" inputmode="numeric" />
             </div>
 
-            <input type="hidden" name="cart_json" id="cart_json" value="[]" />
+            <input type="hidden" name="cart_json" id="cart-json" value="[]" />
+            <div id="checkout-msg" class="form-msg"></div>
+            <div id="checkout-items"></div>
+            <div id="checkout-total"></div>
             <button type="submit" class="btn btn-accent auth-submit">Place order</button>
           </form>
         </div>
@@ -62,9 +65,9 @@
         try {
           var cart = JSON.parse(localStorage.getItem('art-terre-cart') || '[]');
           if (!Array.isArray(cart)) { cart = []; }
-          document.getElementById('cart_json').value = JSON.stringify(cart);
+          document.getElementById('cart-json').value = JSON.stringify(cart);
         } catch (e) {
-          document.getElementById('cart_json').value = '[]';
+          document.getElementById('cart-json').value = '[]';
         }
       });
       var payRadios = document.querySelectorAll('input[name="payment"]');
