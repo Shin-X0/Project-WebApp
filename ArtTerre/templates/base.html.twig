@@ -186,7 +186,7 @@
 <button class="to-top" id="to-top" aria-label="Back to top">↑</button>
 
 <!-- JavaScript -->
-<script>window.ART_BASE = {{ app.request.basePath|json_encode|raw }};</script>
+<script>window.ART_BASE = {{ app.request.basePath|json_encode|raw }}; window.ART_CSRF_LIKE = {{ csrf_token('like_artist')|json_encode|raw }};</script>
 <script src="{{ asset('js/script.js') }}?v=13"></script>
 </body>
 </html>

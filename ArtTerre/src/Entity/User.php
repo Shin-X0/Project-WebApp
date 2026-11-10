@@ -53,6 +53,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'artist', targetEntity: Artwork::class)]
     private Collection $artworks;
 
+    /** Likes/hearts this artist has received. */
+    #[ORM\OneToMany(mappedBy: 'artist', targetEntity: ArtistLike::class)]
+    private Collection $artistLikes;
+
+    /** Likes this user has given to other artists. */
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: ArtistLike::class)]
+    private Collection $givenArtistLikes;
+
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Order::class)]
     private Collection $orders;
 
@@ -66,6 +74,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->artworks = new ArrayCollection();
+        $this->artistLikes = new ArrayCollection();
+        $this->givenArtistLikes = new ArrayCollection();
         $this->orders = new ArrayCollection();
         $this->cartItems = new ArrayCollection();
         $this->contactMessages = new ArrayCollection();
@@ -198,6 +208,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getArtworks(): Collection
     {
         return $this->artworks;
+    }
+
+    /** @return Collection<int, ArtistLike> */
+    public function getArtistLikes(): Collection
+    {
+        return $this->artistLikes;
+    }
+
+    /** @return Collection<int, ArtistLike> */
+    public function getGivenArtistLikes(): Collection
+    {
+        return $this->givenArtistLikes;
     }
 
     /** @return Collection<int, Order> */

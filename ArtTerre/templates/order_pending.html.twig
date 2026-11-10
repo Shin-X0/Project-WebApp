@@ -28,16 +28,18 @@
           </ul>
 
           {% if canUpdate %}
-            <form class="order-status-form" method="post" action="{{ path('app_order_pending_status', { no: order.orderNo }) }}">
+            <form class="order-status-form" method="post" action="{{ path('app_order_pending_status', { no: order.orderNo }) }}" data-status-form>
+              <input type="hidden" name="_token" value="{{ csrf_token('order_status_update' ~ order.id) }}">
               <div class="field">
                 <label for="status">Update status</label>
-                <select name="status" id="status" required>
+                <select name="status" id="status" data-status-select required>
                   {% for status in statuses %}
                     <option value="{{ status }}"{{ order.status == status ? ' selected' : '' }}>{{ status }}</option>
                   {% endfor %}
                 </select>
               </div>
-              <button type="submit" class="btn btn-accent">Update status</button>
+              <button type="submit" class="btn btn-accent order-status-save">Update status</button>
+              <span class="status-feedback" data-status-feedback role="status" aria-live="polite"></span>
             </form>
           {% else %}
             <p class="order-note">Buyers are view-only — the seller or an admin updates the status.</p>

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Order;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -53,17 +54,43 @@ class OrderPendingController extends AbstractController
             throw new NotFoundHttpException('Order not found.');
         }
 
-        if (!$this->canUpdateStatus($order)) {
-            $this->addFlash('error', 'You are not allowed to update this order.');
+        $token = (string) $request->request->get('_token', '');
+        if (!$this->isCsrfTokenValid('order_status_update' . $order->getId(), $token)) {
+            return $this->statusResponse($request, $order, false, 'Invalid security token. Please try again.');
+        }
 
-            return $this->redirectToRoute('app_order_pending', ['no' => $order->getOrderNo()]);
+        if (!$this->canUpdateStatus($order)) {
+            return $this->statusResponse($request, $order, false, 'You are not allowed to update this order.');
         }
 
         $status = (string) $request->request->get('status', '');
-        if (in_array($status, Order::STATUSES, true)) {
-            $order->setStatus($status);
-            $this->em->flush();
-            $this->addFlash('success', 'Order status updated to “' . $status . '”.');
+        if (!in_array($status, Order::STATUSES, true)) {
+            return $this->statusResponse($request, $order, false, 'Unknown status value.');
+        }
+
+        $order->setStatus($status);
+        $this->em->flush();
+
+        return $this->statusResponse($request, $order, true, 'Order status updated to “' . $status . '”.');
+    }
+
+    /* Shared response helper: JSON payload for AJAX requests, otherwise a
+       flash message plus redirect (progressive enhancement). */
+    private function statusResponse(Request $request, Order $order, bool $success, string $message): Response
+    {
+        if ($request->isXmlHttpRequest()) {
+            return new JsonResponse([
+                'success' => $success,
+                'message' => $message,
+                'status'  => $order->getStatus(),
+            ]);
+        }
+
+        $this->addFlash($success ? 'success' : 'error', $message);
+
+        $referer = $request->headers->get('referer');
+        if ($referer !== null && str_starts_with($referer, $request->getSchemeAndHttpHost())) {
+            return $this->redirect($referer);
         }
 
         return $this->redirectToRoute('app_order_pending', ['no' => $order->getOrderNo()]);

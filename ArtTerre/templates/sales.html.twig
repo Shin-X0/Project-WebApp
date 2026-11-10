@@ -20,7 +20,7 @@
           <div class="auth-card reveal">
             <h2 class="cart-summary-title">Order {{ order.orderNo }}</h2>
             <p class="order-note">
-              Status: <strong>{{ order.status }}</strong> — {{ order.name }} · {{ order.email }} · total ${{ order.total }}
+              Status: <span class="order-status-text" data-status-text>{{ order.status }}</span> — {{ order.name }} · {{ order.email }} · total ${{ order.total }}
             </p>
             <ul>
               {% for item in order.items %}
@@ -29,7 +29,17 @@
                 {% endif %}
               {% endfor %}
             </ul>
-            <a class="btn btn-outline" href="{{ path('app_order_pending', { no: order.orderNo }) }}">Update status</a>
+            <form class="order-status-form" method="post" action="{{ path('app_order_pending_status', { no: order.orderNo }) }}" data-status-form>
+              <input type="hidden" name="_token" value="{{ csrf_token('order_status_update' ~ order.id) }}">
+              <label class="sr-only" for="sales-status-{{ order.id }}">Update status for {{ order.orderNo }}</label>
+              <select class="status-select" name="status" id="sales-status-{{ order.id }}" data-status-select aria-label="Update status for {{ order.orderNo }}">
+                {% for status in statuses %}
+                  <option value="{{ status }}"{{ order.status == status ? ' selected' : '' }}>{{ status }}</option>
+                {% endfor %}
+              </select>
+              <button type="submit" class="btn btn-accent order-status-save">Update status</button>
+              <span class="status-feedback" data-status-feedback role="status" aria-live="polite"></span>
+            </form>
           </div>
         {% endfor %}
       </div>

@@ -127,8 +127,77 @@
     });
   }
 
+  /* Inline order status updates (progressive enhancement).
+     Falls back to a normal POST (full page reload / flash) without JS. */
+  function showStatusFeedback(el, message, state) {
+    if (!el) return;
+    el.textContent = message;
+    el.setAttribute("data-state", state);
+    el.classList.add("show");
+    clearTimeout(el._hideTimer);
+    el._hideTimer = setTimeout(function () {
+      el.classList.remove("show");
+    }, 2600);
+  }
+
+  function initStatusForms() {
+    var forms = document.querySelectorAll("[data-status-form]");
+    if (!forms.length) return;
+
+    Array.prototype.forEach.call(forms, function (form) {
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        var select = form.querySelector("[data-status-select]");
+        var badge = form.querySelector("[data-status-badge]");
+        var feedback = form.querySelector("[data-status-feedback]");
+        var payload = new URLSearchParams(new FormData(form));
+
+        form.classList.add("is-saving");
+
+        fetch(form.action, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+          },
+          body: payload.toString(),
+          credentials: "same-origin"
+        })
+          .then(function (response) {
+            return response.json().catch(function () {
+              return { success: false, message: "Unexpected server response." };
+            });
+          })
+          .then(function (data) {
+            form.classList.remove("is-saving");
+            if (!data || !data.success) {
+              if (select) {
+                select.value = data && data.status ? data.status : select.getAttribute("data-original") || "";
+              }
+              showStatusFeedback(feedback, (data && data.message) || "Could not update status.", "error");
+              return;
+            }
+            if (badge) {
+              badge.textContent = data.status;
+              badge.className = "admin-badge badge-" + data.status;
+            }
+            if (select) {
+              select.setAttribute("data-original", data.status);
+              select.value = data.status;
+            }
+            showStatusFeedback(feedback, data.message || "Status updated.", "success");
+          })
+          .catch(function () {
+            form.classList.remove("is-saving");
+            showStatusFeedback(feedback, "Network error — please try again.", "error");
+          });
+      });
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     initListFilters();
     initThumbnails();
+    initStatusForms();
   });
 })();

@@ -41,6 +41,9 @@ class SalesController extends AbstractController
             ->getQuery()
             ->getResult();
 
-        return $this->render('sales.html.twig', ['orders' => $orders]);
+        return $this->render('sales.html.twig', [
+            'orders' => $orders,
+            'statuses' => Order::STATUSES,
+        ]);
     }
 }

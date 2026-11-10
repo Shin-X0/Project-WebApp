@@ -440,6 +440,26 @@ h1, h2, h3, h4 {
   font-size: 1.15rem;
 }
 
+/* Heart-like count pill shown in the artist card footer */
+.like-count {
+  margin-left: auto;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--clr-accent);
+  background: rgba(201, 123, 99, 0.12);
+  border-radius: 999px;
+  padding: 0.15rem 0.55rem;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+/* Wrapper for name + meta line inside an artist card footer */
+.artist-meta {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
 /* ---------- Featured Artworks ---------- */
 .artworks { background: var(--clr-primary-soft); }
 
@@ -2480,3 +2500,60 @@ button.user-chip { cursor: pointer; }
   color: var(--clr-secondary-deep);
   text-decoration: underline;
 }
+
+/* ---------- Order status update (progressive enhancement) ---------- */
+.order-status-form .status-select {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1.5px solid var(--clr-line);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 2.2rem 0.5rem 0.8rem;
+  font: inherit;
+  background: var(--clr-white)
+    url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b8f71' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")
+    no-repeat right 0.7rem center / 0.9rem;
+  color: var(--clr-body);
+  cursor: pointer;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.order-status-form .status-select:hover,
+.order-status-form .status-select:focus {
+  border-color: var(--clr-secondary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(107, 143, 113, 0.18);
+}
+
+.order-status-form .status-select:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.order-status-text {
+  color: var(--clr-secondary-dark);
+  font-weight: 600;
+}
+
+.order-status-form.is-saving .status-select,
+.order-status-form.is-saving .order-status-save {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.status-feedback {
+  width: 100%;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.4;
+  opacity: 0;
+  transform: translateY(2px);
+  transition: opacity var(--transition), transform var(--transition);
+}
+
+.status-feedback.show {
+  opacity: 1;
+  transform: none;
+}
+
+.status-feedback[data-state="success"] { color: var(--clr-secondary-dark); }
+.status-feedback[data-state="error"]   { color: var(--clr-accent-shade); }

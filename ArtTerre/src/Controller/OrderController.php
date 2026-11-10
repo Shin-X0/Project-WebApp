@@ -21,6 +21,7 @@ final class OrderController extends AbstractController
     {
         return $this->render('order/index.html.twig', [
             'orders' => $orderRepository->findAll(),
+            'statuses' => Order::STATUSES,
         ]);
     }
 
@@ -49,6 +50,7 @@ final class OrderController extends AbstractController
     {
         return $this->render('order/show.html.twig', [
             'order' => $order,
+            'statuses' => Order::STATUSES,
         ]);
     }
 

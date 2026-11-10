@@ -22,35 +22,24 @@
         <h2 class="section-title reveal">Top Artists</h2>
 
         <div class="artist-grid">
-          <article class="artist-card reveal">
-            <div class="artist-photo"><span class="artist-initials">AG</span></div>
-            <div class="artist-foot">
-              <button class="like-btn" type="button" aria-label="Like Alexander The Great" aria-pressed="false">
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-              </button>
-              <h3 class="artist-name">Alexander The Great</h3>
-            </div>
-          </article>
-
-          <article class="artist-card reveal">
-            <div class="artist-photo"><span class="artist-initials">SD</span></div>
-            <div class="artist-foot">
-              <button class="like-btn" type="button" aria-label="Like Sean Da Vinci" aria-pressed="false">
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-              </button>
-              <h3 class="artist-name">Sean Da Vinci</h3>
-            </div>
-          </article>
-
-          <article class="artist-card reveal">
-            <div class="artist-photo"><span class="artist-initials">RS</span></div>
-            <div class="artist-foot">
-              <button class="like-btn" type="button" aria-label="Like Rembrandt Sean Rijn" aria-pressed="false">
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-              </button>
-              <h3 class="artist-name">Rembrandt Sean Rijn</h3>
-            </div>
-          </article>
+          {% for entry in topArtists %}
+            {% set user = entry.artist %}
+            <article class="artist-card reveal">
+              <div class="artist-photo"><span class="artist-initials">{{ user.name|slice(0, 2)|upper }}</span></div>
+              <div class="artist-foot">
+                <button class="like-btn like-artist{{ user.id in likedByUser ? ' liked' : '' }}" type="button"
+                        aria-label="Like {{ user.name }}"
+                        aria-pressed="{{ user.id in likedByUser ? 'true' : 'false' }}"
+                        data-artist-id="{{ user.id }}">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                </button>
+                <h3 class="artist-name">{{ user.name }}</h3>
+                <span class="like-count" title="Likes">{{ entry.likeCount }}</span>
+              </div>
+            </article>
+          {% else %}
+            <p class="reveal">No favourites yet — sign in and tap the heart on an artist to see them here.</p>
+          {% endfor %}
         </div>
 
         <div class="section-cta reveal">

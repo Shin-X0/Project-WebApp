@@ -131,36 +131,74 @@ filterBtns.forEach((btn) => {
 });
 
 /* ============================================================
-   4. LIKE BUTTONS (artists + artworks)
+   4. LIKE / HEART BUTTONS (artists)
    ============================================================ */
-/* Likes persist in localStorage, keyed by the button's aria-label
-   (e.g. "Like Alexander The Great"), so a heart stays filled after
-   a reload or across pages. */
-const LIKES_KEY = "art-terre-likes";
+/* Hearts are saved on the server (artist_likes table) and drive the
+   Top Artists list. A signed-in user toggles their own heart via
+   POST /artists/like/{id}; guests are sent to the sign-in page. */
+const likeButtons = $$(".like-artist");
 
-let likedItems = [];
-try {
-  likedItems = JSON.parse(localStorage.getItem(LIKES_KEY) || "[]");
-} catch { likedItems = []; }
-const likedSet = new Set(Array.isArray(likedItems) ? likedItems : []);
+likeButtons.forEach((btn) => {
+  const artistId = btn.getAttribute("data-artist-id");
+  const countEl = btn.closest(".artist-foot")?.querySelector(".like-count");
 
-const saveLikes = () =>
-  localStorage.setItem(LIKES_KEY, JSON.stringify([...likedSet]));
+  btn.addEventListener("click", async () => {
+    if (btn.disabled) return;
+    btn.disabled = true;
 
-$$(".like-btn").forEach((btn) => {
-  const key = btn.getAttribute("aria-label") || "";
-  const apply = () => {
-    const liked = likedSet.has(key);
-    btn.classList.toggle("liked", liked);
-    btn.setAttribute("aria-pressed", String(liked));
-  };
+    const body = new URLSearchParams({
+      _csrf_token: window.ART_CSRF_LIKE || "",
+    });
 
-  apply();
+    let data = null;
+    try {
+      const res = await fetch(
+        (window.ART_BASE || "") + "/artists/like/" + artistId,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/x-www-form-urlencoded; charset=UTF-8",
+          },
+          credentials: "same-origin",
+          body: body.toString(),
+        }
+      );
 
-  btn.addEventListener("click", () => {
-    likedSet.has(key) ? likedSet.delete(key) : likedSet.add(key);
-    saveLikes();
-    apply();
+      if (res.status === 401) {
+        /* Guest — ask, then send them to sign in. */
+        if (window.confirm("Sign in to like artists on Art Terre.")) {
+          window.location.href = (window.ART_BASE || "") + "/login";
+        }
+        return;
+      }
+
+      data = await res.json();
+    } catch {
+      data = null;
+    } finally {
+      btn.disabled = false;
+    }
+
+    if (data && data.success) {
+      btn.classList.toggle("liked", data.liked);
+      btn.setAttribute("aria-pressed", String(data.liked));
+      const card = btn.closest(".artist-card");
+      if (countEl) countEl.textContent = String(data.count);
+      if (card) {
+        /* Bump the heart when it is freshly liked. */
+        if (data.liked) {
+          btn.animate(
+            [
+              { transform: "scale(1)" },
+              { transform: "scale(1.3)" },
+              { transform: "scale(1)" },
+            ],
+            { duration: 320, easing: "ease" }
+          );
+        }
+      }
+    }
   });
 });
 
@@ -770,11 +808,70 @@ if (toTop) {
 }
 
 /* ============================================================
+   9. ORDER STATUS UPDATE (progressive enhancement)
+   The forms work as a normal POST without JavaScript; with JS the
+   dropdown + badge update in place via fetch().
+   ============================================================ */
+const showStatusFeedback = (el, message, state) => {
+  if (!el) return;
+  el.textContent = message;
+  el.setAttribute("data-state", state);
+  el.classList.add("show");
+  clearTimeout(el._statusTimer);
+  el._statusTimer = setTimeout(() => el.classList.remove("show"), 2600);
+};
+
+document.querySelectorAll("[data-status-form]").forEach((form) => {
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const select = form.querySelector("[data-status-select]");
+    const text = form.querySelector("[data-status-text]");
+    const feedback = form.querySelector("[data-status-feedback]");
+    const payload = new URLSearchParams(new FormData(form));
+
+    form.classList.add("is-saving");
+
+    let data;
+    try {
+      const response = await fetch(form.action, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
+        body: payload.toString(),
+        credentials: "same-origin",
+      });
+      data = await response.json().catch(() => {
+        return { success: false, message: "Unexpected server response." };
+      });
+    } catch (err) {
+      data = { success: false, message: "Network error — please try again." };
+    }
+
+    form.classList.remove("is-saving");
+
+    if (data && data.success) {
+      if (text) text.textContent = data.status;
+      if (select) {
+        select.setAttribute("data-original", data.status);
+        select.value = data.status;
+      }
+      showStatusFeedback(feedback, data.message || "Status updated.", "success");
+    } else {
+      if (select) {
+        select.value = (data && data.status) ? data.status : select.getAttribute("data-original") || "";
+      }
+      showStatusFeedback(feedback, (data && data.message) || "Could not update status.", "error");
+    }
+  });
+});
+
+/* ============================================================
    NEXT STEPS (prepared for future work)
    ------------------------------------------------------------
    - Replace .art CSS placeholders with real <img> artwork files
    - Replace artist initials with real portrait photos
    - Connect forms to a backend / email service
    - Connect the checkout form to a real payment backend
-   - Move cart & likes from localStorage into the user accounts
+   - Move cart from localStorage into the user accounts
+   (likes/hearts are already persisted server-side — artist_likes)
    ============================================================ */

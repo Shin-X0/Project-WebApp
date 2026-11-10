@@ -28,10 +28,25 @@
         <tr><th>City</th><td>{{ order.city }}</td></tr>
         <tr><th>Zip</th><td class="cell-mono">{{ order.zip }}</td></tr>
         <tr><th>Method</th><td>{{ order.paymentMethod }}</td></tr>
-        <tr><th>Status</th><td><span class="admin-badge badge-{{ order.status }}">{{ order.status }}</span></td></tr>
+        <tr><th>Status</th><td><span class="admin-badge badge-{{ order.status }}" data-status-badge>{{ order.status }}</span></td></tr>
         <tr><th>Total</th><td class="cell-mono">{{ order.total }}</td></tr>
         <tr><th>Created At</th><td class="cell-muted">{{ order.createdAt ? order.createdAt|date('Y-m-d H:i:s') : '' }}</td></tr>
       </tbody>
     </table>
+  </div>
+
+  <div class="admin-form status-panel">
+    <h2 class="form-title">Update status</h2>
+    <form class="status-update-form" method="post" action="{{ path('app_order_pending_status', { no: order.orderNo }) }}" data-status-form>
+      <input type="hidden" name="_token" value="{{ csrf_token('order_status_update' ~ order.id) }}">
+      <label for="order-status">Status</label>
+      <select class="status-select" name="status" id="order-status" data-status-select>
+        {% for status in statuses %}
+          <option value="{{ status }}"{{ order.status == status ? ' selected' : '' }}>{{ status }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn btn-secondary">Update status</button>
+      <span class="status-feedback" data-status-feedback role="status" aria-live="polite"></span>
+    </form>
   </div>
 {% endblock %}

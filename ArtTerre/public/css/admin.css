@@ -1143,6 +1143,111 @@ a { color: inherit; }
   .admin-card:hover { transform: none; }
 }
 
+/* ---------- Inline status update ---------- */
+.status-update-form {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.admin-table .status-update-form {
+  margin: 0;
+}
+
+.status-update-form select,
+.status-select {
+  appearance: none;
+  -webkit-appearance: none;
+  min-width: 8.5rem;
+  padding: 0.42rem 2.1rem 0.42rem 0.7rem;
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius-sm);
+  background-color: #fff;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b675e' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.6rem center;
+  background-size: 0.85rem;
+  font-family: var(--admin-font-body);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--admin-text);
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.status-update-form select:hover,
+.status-select:hover {
+  border-color: var(--admin-accent);
+}
+
+.status-update-form select:focus,
+.status-select:focus {
+  outline: none;
+  border-color: var(--admin-accent);
+  box-shadow: var(--admin-ring);
+}
+
+.status-update-form select:disabled,
+.status-select:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.admin-table .status-select {
+  min-width: 7.5rem;
+  padding-top: 0.32rem;
+  padding-bottom: 0.32rem;
+  font-size: 0.78rem;
+}
+
+/* Inline feedback next to the control */
+.status-feedback {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.3;
+  opacity: 0;
+  transform: translateY(2px);
+  transition: opacity 0.18s, transform 0.18s;
+}
+
+.status-feedback.show {
+  opacity: 1;
+  transform: none;
+}
+
+.status-feedback[data-state="success"] { color: var(--admin-accent-dark); }
+.status-feedback[data-state="error"]   { color: var(--admin-danger); }
+
+.admin-table .status-feedback {
+  display: block;
+  width: 100%;
+  max-width: 11rem;
+  font-size: 0.72rem;
+}
+
+/* Status panel on the order detail screen */
+.status-panel {
+  margin-top: 1.2rem;
+}
+
+.status-panel .status-update-form > label {
+  display: block;
+  width: 100%;
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: var(--admin-text);
+  margin-bottom: -0.1rem;
+}
+
+.status-update-form.is-saving .status-select,
+.status-update-form.is-saving button {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+
 
 
 

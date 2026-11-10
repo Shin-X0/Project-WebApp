@@ -42,7 +42,19 @@
           <td class="cell-muted">{{ order.city }}</td>
           <td class="cell-mono">{{ order.zip }}</td>
           <td class="cell-muted">{{ order.paymentMethod }}</td>
-          <td><span class="admin-badge badge-{{ order.status }}">{{ order.status }}</span></td>
+          <td>
+            <form class="status-update-form" method="post" action="{{ path('app_order_pending_status', { no: order.orderNo }) }}" data-status-form>
+              <input type="hidden" name="_token" value="{{ csrf_token('order_status_update' ~ order.id) }}">
+              <span class="admin-badge badge-{{ order.status }}" data-status-badge>{{ order.status }}</span>
+              <label class="sr-only" for="status-{{ order.id }}">Update status for {{ order.orderNo }}</label>
+              <select class="status-select" name="status" id="status-{{ order.id }}" data-status-select aria-label="Update status for {{ order.orderNo }}">
+                {% for status in statuses %}
+                  <option value="{{ status }}"{{ order.status == status ? ' selected' : '' }}>{{ status }}</option>
+                {% endfor %}
+              </select>
+              <span class="status-feedback" data-status-feedback role="status" aria-live="polite"></span>
+            </form>
+          </td>
           <td class="cell-mono">{{ order.total }}</td>
           <td class="cell-muted">{{ order.createdAt ? order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
           <td class="admin-actions-cell">
