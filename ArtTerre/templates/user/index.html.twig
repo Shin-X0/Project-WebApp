@@ -29,7 +29,18 @@
       {% for user in users %}
         <tr>
           <td class="cell-mono">{{ user.id }}</td>
-          <td>{{ user.name }}</td>
+          <td>
+            <span class="admin-user-cell">
+              <span class="admin-user-thumb">
+                {% if user.hasProfilePhoto() %}
+                  <img src="{{ asset(user.profileImagePath) }}" alt="" />
+                {% else %}
+                  {{ user.name|first|upper }}
+                {% endif %}
+              </span>
+              {{ user.name }}
+            </span>
+          </td>
           <td>{{ user.email }}</td>
           <td>
             <span class="admin-badge badge-{{ user.role }}">

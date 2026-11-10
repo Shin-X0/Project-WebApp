@@ -25,7 +25,13 @@
           {% for entry in topArtists %}
             {% set user = entry.artist %}
             <article class="artist-card reveal">
-              <div class="artist-photo"><span class="artist-initials">{{ user.name|slice(0, 2)|upper }}</span></div>
+              <div class="artist-photo">
+                {% if user.hasProfilePhoto() %}
+                  <img src="{{ asset(user.profileImagePath) }}" alt="Profile photo of {{ user.name }}" />
+                {% else %}
+                  <span class="artist-initials">{{ user.name|slice(0, 2)|upper }}</span>
+                {% endif %}
+              </div>
               <div class="artist-foot">
                 <button class="like-btn like-artist{{ user.id in likedByUser ? ' liked' : '' }}" type="button"
                         aria-label="Like {{ user.name }}"

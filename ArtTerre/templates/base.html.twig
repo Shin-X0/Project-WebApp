@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
   <link rel="icon" href="{{ asset('images/logo.png') }}" />
-  <link rel="stylesheet" href="{{ asset('css/style.css') }}?v=26" />
+  <link rel="stylesheet" href="{{ asset('css/style.css') }}?v=27" />
 </head>
 <body>
 
@@ -39,12 +39,19 @@
           {% set isSellerOnly = app.user.isArtist() and not app.user.isAdmin() %}
           <div class="account-menu" id="account-menu">
             <button class="user-chip" id="account-toggle" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="account-dropdown" title="{{ app.user.email }}">
-              <span class="user-avatar">{{ initial }}</span>
+              <span class="user-avatar">
+                {% if app.user.hasProfilePhoto() %}
+                  <img src="{{ asset(app.user.profileImagePath) }}" alt="Profile photo of {{ app.user.name }}" />
+                {% else %}
+                  {{ initial }}
+                {% endif %}
+              </span>
               <span class="user-name">Hi, {{ firstName }}</span>
               <span class="chip-bars" aria-hidden="true"><span></span><span></span><span></span></span>
             </button>
             <div class="account-dropdown" id="account-dropdown" role="menu" aria-labelledby="account-toggle">
               <p class="account-email" title="{{ app.user.email }}">{{ app.user.email }}</p>
+              <a class="account-item" href="{{ path('app_profile') }}" role="menuitem">My profile</a>
               {% if app.user.isArtist() %}
                 <a class="account-item" href="{{ path('app_upload_artwork') }}" role="menuitem">Sell artwork</a>
               {% endif %}

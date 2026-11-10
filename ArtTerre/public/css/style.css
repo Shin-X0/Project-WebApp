@@ -1630,6 +1630,67 @@ button.user-chip { cursor: pointer; }
   font-weight: 700;
 }
 
+/* Uploaded profile photo inside the header avatar chip */
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Uploaded profile photo on artist cards (fills the photo area) */
+.artist-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---------- My Profile page (profile picture upload) ---------- */
+.profile-preview-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.4rem;
+}
+
+.profile-photo-preview {
+  width: 96px;
+  height: 96px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--clr-secondary);
+  color: var(--clr-white);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 2.2rem;
+}
+
+.profile-photo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-preview-text h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.15rem;
+}
+
+.profile-preview-text p {
+  font-size: 0.9rem;
+  color: var(--clr-muted);
+  word-break: break-all;
+}
+
+.profile-hint-text {
+  font-size: 0.82rem;
+  color: var(--clr-muted);
+  margin-top: 0.35rem;
+}
+
 .user-name {
   font-family: var(--font-display);
   font-weight: 600;

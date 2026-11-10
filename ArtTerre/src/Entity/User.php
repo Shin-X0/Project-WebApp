@@ -50,6 +50,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE)]
     private \DateTimeImmutable $createdAt;
 
+    /* Uploaded profile photo, e.g. "uploads/profiles/20261110_123456_abc123.jpg". */
+    #[ORM\Column(name: 'profile_image_path', length: 255, nullable: true)]
+    private ?string $profileImagePath = null;
+
     #[ORM\OneToMany(mappedBy: 'artist', targetEntity: Artwork::class)]
     private Collection $artworks;
 
@@ -149,6 +153,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    public function getProfileImagePath(): ?string
+    {
+        return $this->profileImagePath;
+    }
+
+    public function setProfileImagePath(?string $profileImagePath): static
+    {
+        $this->profileImagePath = $profileImagePath;
+
+        return $this;
+    }
+
+    public function hasProfilePhoto(): bool
+    {
+        return $this->profileImagePath !== null && $this->profileImagePath !== '';
     }
 
     /* ---------- Security bridge (old includes/auth.php equivalents) ---------- */

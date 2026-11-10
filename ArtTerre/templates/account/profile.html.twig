@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Profile — Art Terre Creations{% endblock %}
+
+{% block body %}
+    <section class="page-hero">
+      <div class="container">
+        <h1 class="page-hero-title reveal">My Profile</h1>
+        <p class="page-hero-sub reveal">Add your own profile picture — it shows next to your name across Art Terre.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="auth-card reveal">
+          <div class="profile-preview-row">
+            <div class="profile-photo-preview">
+              {% if app.user.hasProfilePhoto() %}
+                <img src="{{ asset(app.user.profileImagePath) }}" alt="Profile photo of {{ app.user.name }}" />
+              {% else %}
+                <span>{{ app.user.name|first|upper }}</span>
+              {% endif %}
+            </div>
+            <div class="profile-preview-text">
+              <h3>{{ app.user.name }}</h3>
+              <p>{{ app.user.email }}</p>
+            </div>
+          </div>
+
+          <form class="auth-form" method="post" action="{{ path('app_profile_photo') }}" enctype="multipart/form-data" novalidate>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('profile_photo') }}" />
+
+            <div class="field">
+              <label for="profile-photo">Profile picture</label>
+              <input type="file" id="profile-photo" name="photo" accept="image/*" required />
+              <p class="field-hint profile-hint-text">
+                JPG, PNG, WEBP, or GIF — at least 200×200 px, 4 MB maximum.
+              </p>
+            </div>
+
+            <button type="submit" class="btn btn-accent auth-submit">Save profile picture</button>
+          </form>
+        </div>
+      </div>
+    </section>
+{% endblock %}
